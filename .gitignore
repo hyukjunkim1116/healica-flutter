@@ -305,3 +305,5 @@ ios/*.cer
 ios/*.dSYM.zip
 android/fastlane/README.md
 ios/fastlane/README.md
+android/*.jks
+android/*.properties

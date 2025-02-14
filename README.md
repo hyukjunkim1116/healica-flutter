@@ -4,6 +4,8 @@ healica
 
 ## Getting Started
 
+flutter build appbundle
+flutter build ipa
 cd ios
 cd android
 
