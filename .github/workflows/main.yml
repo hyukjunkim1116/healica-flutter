@@ -1,0 +1,46 @@
+name: Build and Release Android APK
+
+on:
+  push:
+    branches:
+      - main # 또는 배포에 사용할 브랜치 이름
+
+jobs:
+  build:
+    name: Build and Release APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Java JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '18' # 최신 LTS 버전 사용
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.19.4' # 최신 안정 버전 사용
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Run tests
+        run: flutter test
+
+      - name: Build release APK
+        run: flutter build apk --release --split-per-abi
+
+      - name: Release APK
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "build/app/outputs/apk/release/*.apk"
+          token: ${{ secrets.GITHUB_TOKEN }} # GitHub에서 제공하는 기본 토큰 사용
+          tag: ${{ github.ref }} # 푸시된 브랜치 또는 태그 이름을 태그로 사용
+          commit: ${{ github.sha }} # 커밋 해시를 사용
+          body: |
+            Release APK for ${{ github.ref }}
+            Commit: ${{ github.sha }}
+          prerelease: false # 정식 릴리스로 설정
